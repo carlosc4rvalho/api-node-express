@@ -32,10 +32,6 @@ async function conectarAoMongoDB() {
 app.post('/produtos', async (req, res) => {
   const novoProduto = req.body;
   
-  if (isNaN(Number(novoProduto._id))) {
-    return res.status(400).json({mensagem: "Campos _id, deve ser um numero inteiro"});
-  }
-
   try {
     const resultado = await clienteMongo.db("faculdade").collection("produtos").insertOne(novoProduto);
     res.status(201).json({ mensagem: "Produto cadastrado com sucesso" });
