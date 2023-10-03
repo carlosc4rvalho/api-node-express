@@ -32,14 +32,19 @@ async function conectarAoMongoDB() {
 app.post('/produtos', async (req, res) => {
   const novoProduto = req.body;
   
-  try {
-    const resultado = await clienteMongo.db("faculdade").collection("produtos").insertOne(novoProduto);
-    res.status(201).json({ mensagem: "Produto cadastrado com sucesso" });
-  } catch (erro) {
-    console.error("Erro ao cadastrar produto:", erro);
-    res.status(500).json({ mensagem: "Erro ao cadastrar produto" });
+  if (!isNaN(Number(novoProduto._id))) {
+    try {
+      const resultado = await clienteMongo.db("faculdade").collection("produtos").insertOne(novoProduto);
+      res.status(200).json({ mensagem: "Produto cadastrado com sucesso" });
+    } catch (erro) {
+      console.error("Erro ao cadastrar produto:", erro);
+      res.status(500).json({ mensagem: "Erro ao cadastrar produto" });
+    }
+  } else {
+    res.status(400).json({ mensagem: "O campo _id não é um número válido" });
   }
 });
+
 
 // Rota para buscar todos os produtos
 app.get('/produtos', async (req, res) => {
